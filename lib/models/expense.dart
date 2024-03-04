@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
 
-final formatter= DateFormat.yMd();
+final formatter = DateFormat.yMd();
 
 const uuid = Uuid();
 
 enum Category { food, travel, leisure, work }
 
 const Map<Category, IconData> categoryIcons = {
-  Category.food : Icons.lunch_dining,
-  Category.leisure : Icons.movie,
+  Category.food: Icons.lunch_dining,
+  Category.leisure: Icons.movie,
   Category.travel: Icons.flight_takeoff,
-  Category.work : Icons.work
+  Category.work: Icons.work
 };
 
 class Expense {
@@ -30,7 +30,27 @@ class Expense {
   final Category category;
 
   // getter for returning a formatted date
-  String get formatDate{
+  String get formatDate {
     return formatter.format(date);
+  }
+}
+
+class ExpenseBucket {
+  const ExpenseBucket({required this.category, required this.expenses});
+
+  ExpenseBucket.forCategory(List<Expense> allExpenses, this.category)
+      : expenses = allExpenses
+            .where((expense) => expense.category == category)
+            .toList();
+
+  final Category category;
+  final List<Expense> expenses;
+
+  double get totalExpenses {
+    double sum = 0;
+    for (final expense in expenses) {
+      sum += expense.amount;
+    }
+    return sum;
   }
 }
